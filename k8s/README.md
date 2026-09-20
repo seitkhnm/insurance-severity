@@ -5,12 +5,12 @@
 | Файл | Назначение |
 | --- | --- |
 | `configmap.yaml` | Путь к модели внутри образа и уровень логирования |
-| `secret.yaml` | Локальный пароль PostgreSQL и `DATABASE_URL` |
+| `secret.yaml.example` | Шаблон локального Secret с паролем PostgreSQL и `DATABASE_URL` |
 | `deployment.yaml` | API `insurance-service:1.0`, ожидание БД и проверки `/health`, `/ready` |
 | `service.yaml` | ClusterIP-сервис API: порт 80 → 8000 |
 | `postgres.yaml` | PostgreSQL 17, сервис `postgres` и постоянный том 1 GiB |
 
-База называется `insurance`, пользователь — `postgres`. В `secret.yaml` задан локальный пароль `postgres`; при его изменении обнови также пароль в `DATABASE_URL`. Для уже инициализированной БД пароль роли нужно изменить отдельно: обновление Secret не меняет пароль в существующем PVC. Эти значения предназначены для локального учебного запуска.
+База называется `insurance`, пользователь — `postgres`. Создай локальный `secret.yaml` из шаблона `secret.yaml.example` и укажи одинаковый URL-безопасный пароль в `POSTGRES_PASSWORD` и `DATABASE_URL`. Файл `secret.yaml` исключён из Git. Для уже инициализированной БД пароль роли нужно изменить отдельно: обновление Secret не меняет пароль в существующем PVC. Манифесты предназначены для локального учебного запуска.
 
 API стартует в одной реплике и создаёт таблицу `predictions` при запуске. InitContainer сначала проверяет подключение к PostgreSQL. База Kubernetes использует отдельное хранилище: записи из Docker Compose автоматически не переносятся. Перезапуск pod сохраняет данные PVC; удаление локального kind-кластера удалит и его хранилище.
 
@@ -19,7 +19,6 @@ API стартует в одной реплике и создаёт таблиц
 Нужны запущенный Docker, `kind` и `kubectl`. Выполняй команды из корня проекта, где находятся `Dockerfile`, `good.json` и эта папка:
 
 ```bash
-cd "/Users/mukhamejanseitkhan/Desktop/ML PRO/HW 1"
 docker build -t insurance-service:1.0 .
 ```
 
@@ -28,6 +27,14 @@ docker build -t insurance-service:1.0 .
 ```bash
 kind create cluster --name insurance
 ```
+
+Подготовь локальный Secret:
+
+```bash
+cp k8s/secret.yaml.example k8s/secret.yaml
+```
+
+Замени `replace-with-your-password` в обоих полях файла `k8s/secret.yaml`. Шаблон с расширением `.example` не применяется командой `kubectl apply -f k8s/`. Не коммить файл с настоящим паролем.
 
 Загрузи локальный Docker-образ в узлы kind, затем примени манифесты:
 
