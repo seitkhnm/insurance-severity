@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insurance-config
+data:
+  LOG_LEVEL: "INFO"
+  MODEL_PATH: "/app/artifact/severity_gradient_boosting.joblib"
