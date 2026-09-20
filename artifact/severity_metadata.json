@@ -1,0 +1,61 @@
+{
+  "model_name": "severity-gradient-boosting",
+  "model_version": "0.1.0",
+  "trained_at": "2026-09-19T21:46:04+00:00",
+  "n_train": 5411,
+  "n_test": 1804,
+  "target": "avg_claim_amount",
+  "features": [
+    "exposure",
+    "driver_age",
+    "years_licensed",
+    "vehicle_age",
+    "vehicle_type",
+    "engine_power_kw",
+    "annual_mileage_km",
+    "region",
+    "urban_density",
+    "garage",
+    "bonus_malus",
+    "prior_claims_3y",
+    "commercial_use",
+    "telematics_opt_in",
+    "sum_insured",
+    "policy_year"
+  ],
+  "numeric_cols": [
+    "exposure",
+    "driver_age",
+    "years_licensed",
+    "vehicle_age",
+    "engine_power_kw",
+    "annual_mileage_km",
+    "bonus_malus",
+    "prior_claims_3y",
+    "sum_insured",
+    "policy_year"
+  ],
+  "categorical_cols": [
+    "vehicle_type",
+    "region",
+    "urban_density",
+    "garage",
+    "commercial_use",
+    "telematics_opt_in"
+  ],
+  "metrics_test": {
+    "mae": 1461.4465,
+    "rmse": 1918.7415,
+    "r2": -0.028
+  },
+  "model_params": {
+    "n_estimators": 400,
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "random_state": 42
+  },
+  "libs": {
+    "pandas": "3.0.5",
+    "scikit-learn": "1.6.1"
+  }
+}
